@@ -587,16 +587,3 @@ class OWGeneNameMatcher(OWWidget):
         return [str(gene.ncbi_id) if gene.ncbi_id else '?' for gene in self.gene_matcher.genes]
 
 
-if __name__ == "__main__":
-
-    def main(argv=None):
-        app = QApplication(argv or [])
-        w = OWGeneNameMatcher()
-        w.handle_input(Table("brown-selected.tab"))
-        w.show()
-        w.raise_()
-        app.exec_()
-        # w.saveSettings()
-        w.onDeleteWidget()
-
-    sys.exit(main(sys.argv))

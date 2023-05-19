@@ -96,7 +96,7 @@ def cluster_data(coordinates, clustering_algorithm=DBSCAN, **kwargs):
             )
         ]
     )
-    return Table(new_domain, new_clustering.reshape((-1, 1)))
+    return Table.from_numpy(new_domain, new_clustering.reshape((-1, 1)))
 
 
 def assign_labels(clusters, annotations, labels_per_cluster):
@@ -125,7 +125,7 @@ def assign_labels(clusters, annotations, labels_per_cluster):
     clusters_unique = set(clusters.domain[0].values)
 
     if len(annotations.domain) == 0:
-        return {}, Table(
+        return {}, Table.from_numpy(
             Domain([DiscreteVariable("Annotation", values=[])]),
             np.ones((len(clusters), 1)) * np.nan,
         )
@@ -493,7 +493,7 @@ def _filter_clusters(clusters, clusters_meta):
         map(clusters.domain.attributes[0].repr_val, clusters.X[:, 0])
     ):
         clust_idx[i, 0] = clust_map.get(cl, np.nan)
-    new_clusters = Table(
+    new_clusters = Table.from_numpy(
         Domain(
             [
                 DiscreteVariable(
@@ -583,7 +583,7 @@ def annotate_projection(
     clusters, clusters_meta = _filter_clusters(clusters, clusters_meta)
 
     # add the labels to the cluster table
-    clusters_ann = Table(
+    clusters_ann = Table.from_numpy(
         Domain(clusters.domain.attributes + item_annotations.domain.attributes),
         np.concatenate((clusters.X, item_annotations.X), axis=1),
     )
@@ -659,7 +659,7 @@ def cluster_additional_points(coordinates, hulls, cluster_attribute=None):
             else cluster_attribute
         ]
     )
-    return Table(
+    return Table.from_numpy(
         new_domain, np.array(list(map(new_domain[0].to_val, clusters))).reshape(-1, 1)
     )
 
@@ -667,7 +667,7 @@ def cluster_additional_points(coordinates, hulls, cluster_attribute=None):
 if __name__ == "__main__":
     # run hull creation at Iris data
     data = Table("iris")[:, 2:4]
-    clustered_data = Table(
+    clustered_data = Table.from_list(
         Domain([DiscreteVariable("cl", values=["1", "2", "3"])]),
         [[0]] * 50 + [[1]] * 50 + [[2]] * 50,
     )

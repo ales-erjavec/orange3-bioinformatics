@@ -33,13 +33,13 @@ class TestAnnotateSamples(unittest.TestCase):
             ["Type 2", "213"],
             ["Type 2", "214"],
         ]
-        self.markers = Table(m_domain, np.empty((len(m_data), 0)), None, m_data)
+        self.markers = Table.from_numpy(m_domain, np.empty((len(m_data), 0)), None, m_data)
 
         genes = ["111", "112", "113", "114", "211", "212", "213", "214"]
         self.domain = Domain([ContinuousVariable(str(g)) for g in genes])
         for v, g in zip(self.domain.attributes, genes):
             v.attributes = {"Entrez ID": g}
-        self.data = Table(
+        self.data = Table.from_numpy(
             self.domain,
             np.array(
                 [
@@ -110,7 +110,7 @@ class TestAnnotateSamples(unittest.TestCase):
             ["Type 3", "312"],
             ["Type 3", "313"],
         ]
-        markers = Table(m_domain, np.empty((len(m_data), 0)), None, m_data)
+        markers = Table.from_numpy(m_domain, np.empty((len(m_data), 0)), None, m_data)
         with self.data.unlocked(self.data.X):
             self.data.X = array(self.data.X)
         annotations = self.annotate_samples(self.data, markers)
@@ -192,7 +192,7 @@ class TestAnnotateSamples(unittest.TestCase):
                 [0, 0, 0, 0, 1.1, 1.1, 1.1, 1.1],
             ]
         )
-        z_table = Table(self.domain, z)
+        z_table = Table.from_numpy(self.domain, z)
         attrs = [
             {"111", "112", "113", "114"},
             {"111", "112", "211"},
@@ -289,7 +289,7 @@ class TestAnnotateSamples(unittest.TestCase):
         ct_variable = DiscreteVariable("Cell Type", values=list(set(ct_values)))
         entrez_variable = DiscreteVariable("Entrez ID", values=list(set(entrezid)))
 
-        markers = Table(
+        markers = Table.from_list(
             Domain([ct_variable, entrez_variable]),
             list(
                 zip(
@@ -319,7 +319,7 @@ class TestAnnotateSamples(unittest.TestCase):
         ct_variable = DiscreteVariable("Cell Type", values=list(set(ct_values)))
         entrez_variable = DiscreteVariable("Entrez ID", values=list(set(entrezid)))
 
-        markers = Table(
+        markers = Table.from_list(
             Domain([ct_variable], metas=[entrez_variable]),
             list(
                 zip(

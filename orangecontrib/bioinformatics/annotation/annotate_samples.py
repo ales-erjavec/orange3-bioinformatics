@@ -119,7 +119,7 @@ class AnnotateSamplesMeta:
         df, columns = AnnotateSamplesMeta._to_pandas(data, use_entrez_id=False)
         df_z_values = AnnotateSamples.mann_whitney_test(df)
 
-        z_table = Table(data.domain, df_z_values.values, data.Y, metas=data.metas)
+        z_table = Table.from_numpy(data.domain, df_z_values.values, data.Y, metas=data.metas)
 
         return z_table
 

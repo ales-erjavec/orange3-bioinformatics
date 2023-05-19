@@ -855,7 +855,7 @@ class OWClusterAnalysis(OWWidget):
             for row in zip(*profiles, gs_names, gs_ids, rank, p_vals, fdr_vals):
                 data.append(list(row))
 
-        self.Outputs.gene_set_scores.send(Table(domain, data))
+        self.Outputs.gene_set_scores.send(Table.from_list(domain, data))
 
     def commit(self):
         selection_model = self.cluster_info_view.selectionModel()

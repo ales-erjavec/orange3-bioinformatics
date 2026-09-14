@@ -13,6 +13,12 @@ T00005\tsce\tSaccharomyces cerevisiae (budding yeast)\tEukaryotes;Fungi;Ascomyce
 T00245\tddi\tDictyostelium discoideum (cellular slime mold)\tEukaryotes;Protists;Amoebozoa;Dictyostelium\
 """
 
+list_genome = """\
+T01001\thsa; Homo sapiens (human)
+T01005\tptr; Pan troglodytes (chimpanzee)
+T02283\tpps; Pan paniscus (bonobo)
+"""
+
 list_pathway_hsa = """\
 path:hsa00010\tGlycolysis / Gluconeogenesis - Homo sapiens (human)
 path:hsa00020\tCitrate cycle (TCA cycle) - Homo sapiens (human)
@@ -50,6 +56,7 @@ def mock_service():
         list=SimpleNamespace(
             organism=SimpleNamespace(get=lambda: list_organism),
             pathway=lambda org: {"hsa": SimpleNamespace(get=lambda: list_pathway_hsa)}[org],
+            genome=SimpleNamespace(get=lambda: list_genome)
         ),
         info=lambda db: {"pathway": SimpleNamespace(get=lambda: info_pathway)}[db],
         get=lambda key: {"genome:T01001": SimpleNamespace(get=lambda: genome_T01001)}[key],

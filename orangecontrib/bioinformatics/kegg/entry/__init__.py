@@ -104,14 +104,16 @@ class DBEntry(object):
             elif event == DBGETEntryParser.SUBSECTION_START:
                 current_subfield = fields.DBSimpleField(text)
                 current_subfield.TITLE = title
-                if not isinstance(current, fields.DBFieldWithSubsections):
-                    # Upgrade simple fields to FieldWithSubsection
-                    new = fields.DBFieldWithSubsections(current.text)
-                    new.TITLE = current.TITLE
-                    current = new
-
             elif event == DBGETEntryParser.SUBSECTION_END:
-                current.subsections.append(current_subfield)
+                if not isinstance(current, fields.DBFieldWithSubsections):
+                    warnings.warn(
+                        f"Unexpected subsection '{current_subfield.TITLE}' "
+                        f"inside '{current.TITLE}' in {type(self).__name__}. "
+                        f"The subsection will be ignored.",
+                        RuntimeWarning,
+                    )
+                else:
+                    current.subsections.append(current_subfield)
                 current_subfield = None
             elif event == DBGETEntryParser.TEXT:
                 if current_subfield is not None:

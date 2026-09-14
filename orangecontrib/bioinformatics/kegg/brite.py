@@ -2,18 +2,13 @@
 KEGG Brite
 
 """
-from __future__ import absolute_import
 
 import io
 import os
 import re
 
 from orangecontrib.bioinformatics.kegg import conf
-
-try:
-    from urllib2 import urlopen
-except ImportError:
-    from urllib.request import urlopen
+from orangecontrib.bioinformatics.kegg.service import web_service
 
 
 class BriteEntry(object):
@@ -40,7 +35,7 @@ class Brite(BriteEntry):
 
     def __init__(self, brite_id, local_cache=None):
         super(Brite, self).__init__("")
-        self.brite_id = id
+        self.brite_id = brite_id
         if local_cache is None:
             local_cache = conf.params["cache.path"]
         self.local_cache = local_cache
@@ -48,14 +43,14 @@ class Brite(BriteEntry):
         self.load(brite_id)
 
     def _get_brite(self, brite_id):
-        url = self.BRITE_URL_FORMAT.format(brite_id=brite_id)
         local_filename = os.path.join(self.local_cache, brite_id + ".keg")
         if not os.path.exists(local_filename):
-            brite = urlopen(url).read()
-            with io.open(local_filename, "wb") as f:
+            service = web_service()
+            brite = service.get(f"br:{brite_id}").get()
+            with open(local_filename, "w", encoding="utf-8") as f:
                 f.write(brite)
 
-        return io.open(local_filename, "r")
+        return open(local_filename, "r", encoding="utf-8")
 
     def load(self, brite_id):
         lines = self._get_brite(brite_id).read().split("\n!\n")[1].splitlines()

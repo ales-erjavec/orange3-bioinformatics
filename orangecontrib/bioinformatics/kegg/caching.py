@@ -4,21 +4,12 @@ Caching framework for cached kegg api calls.
 """
 import os
 import sqlite3
+import pickle
 from datetime import date, datetime, timedelta
 from contextlib import closing
+from collections.abc import MutableMapping
 
 from orangecontrib.bioinformatics.kegg import conf
-
-try:
-    import cPickle as pickle
-except ImportError:
-    import pickle
-
-
-try:
-    from UserDict import DictMixin
-except ImportError:
-    from collections.abc import MutableMapping as DictMixin
 
 
 class Store(object):
@@ -35,7 +26,7 @@ class Store(object):
         pass
 
 
-class Sqlite3Store(Store, DictMixin):
+class Sqlite3Store(Store, MutableMapping):
     def __init__(self, filename):
         self.filename = filename
         self.con = sqlite3.connect(filename)
@@ -114,10 +105,7 @@ class Sqlite3Store(Store, DictMixin):
         return None
 
 
-class DictStore(Store, DictMixin):
-    def __init__(self):
-        Store.__init__(self)
-
+class DictStore(Store, MutableMapping):
     def close(self):
         pass
 

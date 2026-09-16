@@ -2,8 +2,6 @@
 KEGG Brite
 
 """
-
-import io
 import os
 import re
 
@@ -34,7 +32,7 @@ class Brite(BriteEntry):
     BRITE_URL_FORMAT = "http://www.genome.jp/kegg-bin/download_htext?htext={brite_id}.keg&format=htext&filedir="
 
     def __init__(self, brite_id, local_cache=None):
-        super(Brite, self).__init__("")
+        super().__init__("")
         self.brite_id = brite_id
         if local_cache is None:
             local_cache = conf.params["cache.path"]

@@ -3,41 +3,14 @@ DBGET Database Interface
 ========================
 
 """
-from __future__ import absolute_import
-
 import re
-import sys
 from contextlib import closing
+from itertools import chain
+
+from more_itertools import batched
 
 from orangecontrib.bioinformatics.kegg import api, entry
 from orangecontrib.bioinformatics.kegg.entry import fields
-
-
-def iter_take(source_iter, n):
-    """
-    Return a list of the first `n` items in `source_iter`.
-    """
-    source_iter = iter(source_iter)
-    return [item for _, item in zip(range(n), source_iter)]
-
-
-def batch_iter(source_iter, n):
-    """
-    Split the `source_iter` into batches of size `n`.
-    """
-    source_iter = iter(source_iter)
-    while True:
-        batch = iter_take(source_iter, n)
-        if batch:
-            yield batch
-        else:
-            break
-
-
-def chain_iter(chains_iter):
-    for iter in chains_iter:
-        for element in iter:
-            yield element
 
 
 # TODO: DBDataBase should be able to be constructed from a flat text
@@ -95,7 +68,8 @@ class DBDataBase(object):
         """
         batch_size = 100
         iterkeys = self.iterkeys()
-        return chain_iter(zip(batch, self.batch_get(batch)) for batch in batch_iter(iterkeys, batch_size))
+        return chain.from_iterable(zip(batch, self.batch_get(batch))
+                                   for batch in batched(iterkeys, batch_size))
 
     def itervalues(self):
         """
@@ -103,51 +77,28 @@ class DBDataBase(object):
         """
         batch_size = 100
         iterkeys = self.iterkeys()
-        return chain_iter(self.batch_get(batch) for batch in batch_iter(iterkeys, batch_size))
+        return chain.from_iterable(self.batch_get(batch)
+                                   for batch in batched(iterkeys, batch_size))
 
-    if sys.version_info < (3,):
+    def keys(self):
+        """
+        Return an iterator over all database keys. These are unique
+        KEGG identifiers that can be used to query the database.
+        """
+        return iter(self._keys)
 
-        def keys(self):
-            """
-            Return a list of database keys. These are unique KEGG identifiers
-            that can be used to query the database.
-            """
-            return list(self._keys)
+    def values(self):
+        """
+        Return an iterator over all :obj:`DBDataBase.ENTRY_TYPE` instances.
+        """
+        return self.itervalues()
 
-        def values(self):
-            """
-            Return a list of all :obj:`DBDataBase.ENTRY_TYPE` instances.
-            """
-            return self.batch_get(self.keys())
-
-        def items(self):
-            """
-            Return a list of all (key, :obj:`DBDataBase.ENTRY_TYPE` instance)
-            tuples.
-            """
-            return list(zip(self.keys(), self.batch_get(self.keys())))
-
-    else:
-
-        def keys(self):
-            """
-            Return an iterator over all database keys. These are unique
-            KEGG identifiers that can be used to query the database.
-            """
-            return iter(self._keys)
-
-        def values(self):
-            """
-            Return an iterator over all :obj:`DBDataBase.ENTRY_TYPE` instances.
-            """
-            return self.itervalues()
-
-        def items(self):
-            """
-            Return an iterator over all (key, :obj:`DBDataBase.ENTRY_TYPE`)
-            tuples.
-            """
-            return self.iteritems()
+    def items(self):
+        """
+        Return an iterator over all (key, :obj:`DBDataBase.ENTRY_TYPE`)
+        tuples.
+        """
+        return self.iteritems()
 
     def get(self, key, default=None):
         """
@@ -307,9 +258,6 @@ class GenomeEntry(entry.DBEntry):
 
     MULTIPLE_FIELDS = ["REFERENCE"]
 
-    def __init__(self, text):
-        entry.DBEntry.__init__(self, text)
-
     @property
     def organism_code(self):
         """
@@ -343,7 +291,7 @@ class Genome(DBDataBase):
     }
 
     def __init__(self):
-        DBDataBase.__init__(self)
+        super().__init__()
         self._org_list = self.api.list_organisms()
         self._keys = [org.entry_id for org in self._org_list]
 
@@ -467,7 +415,7 @@ class Genes(DBDataBase):
         # TODO: Map to org code from kegg id (T + 5 digits)
         self.DB = org_code
         self.org_code = org_code
-        DBDataBase.__init__(self)
+        super().__init__()
         self._keys = self.api.get_genes_by_organism(org_code)
 
     def gene_aliases(self):
@@ -504,7 +452,7 @@ class Compound(DBDataBase):
     ENTRY_TYPE = CompoundEntry
 
     def __init__(self):
-        DBDataBase.__init__(self)
+        super().__init__()
         self._keys = [d.entry_id for d in self.api.list("cpd")]
 
 
@@ -524,7 +472,7 @@ class Reaction(DBDataBase):
     ENTRY_TYPE = ReactionEntry
 
     def __init__(self):
-        DBDataBase.__init__(self)
+        super().__init__()
         self._keys = [d.entry_id for d in self.api.list("rn")]
 
 
@@ -567,7 +515,7 @@ class Enzyme(DBDataBase):
     ENTRY_TYPE = EnzymeEntry
 
     def __init__(self):
-        DBDataBase.__init__(self)
+        super().__init__()
         self._keys = [d.entry_id for d in self.api.list("ec")]
 
 
@@ -587,7 +535,7 @@ class Orthology(DBDataBase):
     ENTRY_TYPE = OrthologyEntry
 
     def __init__(self):
-        DBDataBase.__init__(self)
+        super().__init__()
         self._keys = [d.entry_id for d in self.api.list("ko")]
 
 
@@ -644,7 +592,7 @@ class Pathway(DBDataBase):
     ENTRY_TYPE = PathwayEntry
 
     def __init__(self, prefix="map"):
-        DBDataBase.__init__(self)
+        super().__init__()
         self.prefix = prefix
         valid = [d.org_code for d in self.api.list_organisms()] + ["map", "ko", "ec", "rn"]
 

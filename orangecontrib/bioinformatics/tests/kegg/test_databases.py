@@ -77,13 +77,5 @@ class TestPathways(unittest.TestCase):
         self._tester("path:hsa05130")
 
 
-class TestUtils(unittest.TestCase):
-    def test_batch_iter(self):
-        iter = range(25)
-        expected = [list(range(10)), list(range(10, 20)), list(range(20, 25))]
-        for exp, batch in zip(expected, databases.batch_iter(iter, 10)):
-            self.assertEqual(exp, batch)
-
-
 if __name__ == '__main__':
     unittest.main()

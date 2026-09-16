@@ -47,12 +47,8 @@ ENTRY       672               CDS       T01001
 NAME        BRCA1, BRCAI, BRCC1, BROVCA1, FANCS, IRIS, PNCA4, PPP1R53, PSCP, RNF53
 DEFINITION  ...
 """
-from __future__ import absolute_import
 
-import os
-import sys
 import threading
-from datetime import datetime
 from functools import reduce
 from itertools import chain
 from contextlib import contextmanager

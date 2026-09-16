@@ -1,11 +1,10 @@
 """ KEGG api interface. """
-from __future__ import absolute_import
-
 import os
 import warnings
 from datetime import datetime
 from operator import itemgetter
 from contextlib import closing
+from functools import lru_cache
 
 from orangecontrib.bioinformatics.kegg import caching
 from orangecontrib.bioinformatics.kegg.types import Link, BInfo, Definition, OrganismSummary
@@ -328,17 +327,9 @@ KEGG api with caching
 """
 
 
-try:
-    from functools import lru_cache
-except ImportError:
-    # TODO: move a copy of lru_cache in .caching if distributing this as a
-    # standalone package
-    from Orange.utils import lru_cache
-
-
 class CachedKeggApi(KeggApi):
     def __init__(self, store=None):
-        KeggApi.__init__(self)
+        super().__init__()
         if store is None:
             self.store = {}
 

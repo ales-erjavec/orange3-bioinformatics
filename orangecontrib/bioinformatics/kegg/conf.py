@@ -4,18 +4,11 @@ obiKEGG2 configuration
 mostly just caching settings
 
 """
-from __future__ import absolute_import
-
 import os
-
+import configparser
 from io import StringIO
 
 from orangecontrib.bioinformatics.utils import serverfiles
-
-try:
-    import ConfigParser as configparser
-except ImportError:
-    import configparser
 
 kegg_dir = serverfiles.localpath("KEGG2")
 

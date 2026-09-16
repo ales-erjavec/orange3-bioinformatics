@@ -75,7 +75,7 @@ class DBFieldWithSubsections(DBSimpleField):
     SUBSECTIONS = None
 
     def __init__(self, text, subsections=None):
-        self.text = text
+        super().__init__(text)
         self.subsections = subsections or []
 
     def format(self, section_indent=12, subsection_indent=2):

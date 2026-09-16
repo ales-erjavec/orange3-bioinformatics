@@ -1,6 +1,6 @@
 import unittest
 
-from six import StringIO
+from io import StringIO
 
 from orangecontrib.bioinformatics.kegg.entry import DBEntry, parser, \
     entry_decorate, fields

@@ -1,7 +1,5 @@
 import unittest
 
-import six
-
 from orangecontrib.bioinformatics.kegg import pathway, databases
 
 
@@ -16,8 +14,8 @@ class TestGenome(unittest.TestCase):
             entry = genome[key]
             self.assertEqual(entry.entry_key, key)
             self.assertIsInstance(entry, genome.ENTRY_TYPE)
-            self.assertIsInstance(entry.name, six.string_types)
-            self.assertIsInstance(entry.taxid, six.string_types)
+            self.assertIsInstance(entry.name, str)
+            self.assertIsInstance(entry.taxid, str)
 
         search_result = genome.search("homo sapiens")[0]
         org_code, name = search_result.split(';')
@@ -43,7 +41,7 @@ class TestGenes(unittest.TestCase):
             self.assertIsInstance(entry, genes.ENTRY_TYPE)
             self.assertIsInstance(entry.aliases(), list)
 
-            self.assertTrue(all(isinstance(a, six.string_types) for a in entry.aliases()))
+            self.assertTrue(all(isinstance(a, str) for a in entry.aliases()))
             all_entries.append(entry)
 
         self.assertSequenceEqual(

@@ -8,7 +8,7 @@ from __future__ import absolute_import
 
 import os
 
-from six import StringIO
+from io import StringIO
 
 from orangecontrib.bioinformatics.utils import serverfiles
 

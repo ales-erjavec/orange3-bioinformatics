@@ -6,8 +6,6 @@ import tarfile
 import warnings
 from collections import namedtuple, defaultdict
 
-import six
-
 from orangecontrib.bioinformatics.ncbi import taxonomy
 from orangecontrib.bioinformatics.utils import statistics, serverfiles, progress_bar_milestones
 from orangecontrib.bioinformatics.go.config import DOMAIN, FILENAME_ONTOLOGY, FILENAME_ANNOTATION
@@ -313,7 +311,7 @@ class Ontology:
         self.alias_mapper = {}
         self.reverse_alias_mapper = defaultdict(set)
         milestones = progress_bar_milestones(len(self.terms), 10)
-        for i, (id, term) in enumerate(six.iteritems(self.terms)):
+        for i, (id, term) in enumerate(self.terms.items()):
             for type_id, parent in term.related:
                 self.terms[parent].related_to.add((type_id, id))
             try:

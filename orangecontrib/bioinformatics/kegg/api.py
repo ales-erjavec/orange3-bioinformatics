@@ -7,8 +7,6 @@ from datetime import datetime
 from operator import itemgetter
 from contextlib import closing
 
-import six
-
 from orangecontrib.bioinformatics.kegg import caching
 from orangecontrib.bioinformatics.kegg.types import Link, BInfo, Definition, OrganismSummary
 from orangecontrib.bioinformatics.kegg.caching import touch_dir, cache_entry, cached_method
@@ -93,7 +91,7 @@ class KeggApi(object):
         """
         Search database 'db' for keywords.
         """
-        if isinstance(keywords, six.string_types):
+        if isinstance(keywords, str):
             keywords = [keywords]
 
         return self.service.find(db)("+".join(keywords)).get()
@@ -102,7 +100,7 @@ class KeggApi(object):
         """
         Retrieve database entries for `ids` list.
         """
-        if not isinstance(ids, six.string_types):
+        if not isinstance(ids, str):
             # Sequence of ids
             ids = "+".join(ids)
 
@@ -114,7 +112,7 @@ class KeggApi(object):
         tuples [(source_id, target_id), ...].
 
         """
-        if not isinstance(source, six.string_types):
+        if not isinstance(source, str):
             source = "+".join(source)
 
         res = self.service.conv(target_db)(source).get()
@@ -380,7 +378,7 @@ class CachedKeggApi(KeggApi):
 
     @cached_method
     def get(self, ids):
-        if not isinstance(ids, six.string_types):
+        if not isinstance(ids, str):
             return self._batch_get(ids)
         else:
             return KeggApi.get(self, ids)

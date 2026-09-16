@@ -7,8 +7,6 @@ import sqlite3
 from datetime import date, datetime, timedelta
 from contextlib import closing
 
-import six
-
 from orangecontrib.bioinformatics.kegg import conf
 
 try:
@@ -71,8 +69,6 @@ class Sqlite3Store(Store, DictMixin):
             raise KeyError(key)
         else:
             pickle_str = r[0][0]
-            if not six.PY3:
-                pickle_str = str(pickle_str)
             try:
                 return pickle.loads(pickle_str)
             except Exception:

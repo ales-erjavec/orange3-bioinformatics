@@ -1,10 +1,7 @@
 """
 DBGET entry
 """
-from __future__ import absolute_import
-
 import warnings
-from collections import defaultdict
 
 from . import fields
 from .parser import DBGETEntryParser
@@ -155,15 +152,3 @@ class DBEntry(object):
         Return a DBGET formated string representation.
         """
         return "".join(f.format(section_indent) for f in self.fields)
-
-    def get(self, key, default=None):
-        raise NotImplementedError
-
-        f = getattr(self, key, None)
-        if f is not None:
-            if key in self.MULTIPLE_FIELDS:
-                return [f.text for f in f]
-            else:
-                return f.text
-        else:
-            return None

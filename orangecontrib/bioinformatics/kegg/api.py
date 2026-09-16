@@ -54,7 +54,11 @@ class KeggApi(object):
         >>> api.list_organisms()  # doctest: +ELLIPSIS
         [OrganismSummary(entry_id='T01001', ...
         """
-        return list(map(OrganismSummary.from_str, self.service.list.organism.get().splitlines()))
+        def from_str(text: str):
+            entry_id, text = text.split("\t", 1)
+            org_code, name = text.split(";", 1)
+            return OrganismSummary(entry_id, org_code, name.strip(), "")
+        return list(map(from_str, self.service.list.genome.get().splitlines()))
 
     def list_pathways(self, organism):
         """

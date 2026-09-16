@@ -2,7 +2,8 @@ import unittest
 
 from six import StringIO
 
-from orangecontrib.bioinformatics.kegg.entry import DBEntry, parser, entry_decorate
+from orangecontrib.bioinformatics.kegg.entry import DBEntry, parser, \
+    entry_decorate, fields
 
 TEST_ENTRY = """\
 ENTRY       test_id    something else
@@ -18,6 +19,9 @@ DESCRIPTION This is a test's description.
 
 @entry_decorate
 class Entry(DBEntry):
+    FIELDS = DBEntry.FIELDS + [
+        ("DESCRIPTION", fields.DBFieldWithSubsections)
+    ]
     pass
 
 

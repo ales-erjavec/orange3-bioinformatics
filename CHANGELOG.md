@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.8.8] - 2026-09-16
+### Fixed
+- [#361](https://github.com/biolab/orange3-bioinformatics/pull/361): Homologs: Fix an error when input has unknown gene
+- [#363](https://github.com/biolab/orange3-bioinformatics/pull/363): kegg:  Fix error with unexpected subsection in dbget entry
+### Changed
+- [#359](https://github.com/biolab/orange3-bioinformatics/pull/359): Differential Expression: Make plot axis visible in dark mode
+- [#360](https://github.com/biolab/orange3-bioinformatics/pull/360): Fix test error due to changed Table.__bool__
+- [#362](https://github.com/biolab/orange3-bioinformatics/pull/362): Mark widget icons as symbolic
+
 ## [4.8.7] - 2026-05-26
 ### Fixed
 - [#358](https://github.com/biolab/orange3-bioinformatics/pull/358): Differential Expression: Fix error due to deprecated/removed parameter use

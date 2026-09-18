@@ -20,9 +20,9 @@ DESCRIPTION This is a test's description.
 @entry_decorate
 class Entry(DBEntry):
     FIELDS = DBEntry.FIELDS + [
+        ("NAME", fields.DBSimpleField),
         ("DESCRIPTION", fields.DBFieldWithSubsections)
     ]
-    pass
 
 
 class TestEntry(unittest.TestCase):

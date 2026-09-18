@@ -208,6 +208,15 @@ class DBGeneField(DBSimpleField):
         lines = text.splitlines()
         return [line.split(" ", 1)[0] for line in lines]
 
+class DBSymbolField(DBSimpleField):
+    __SLOTS__ = ["text"]
+    TITLE = "SYMBOL"
+
+    def _convert(self):
+        text = DBSimpleField._convert(self)
+        symbols = text.split(",")
+        return [s.strip() for s in symbols]
+
 
 class DBEnzymeField(DBSimpleField):
     __SLOTS__ = ["text"]
